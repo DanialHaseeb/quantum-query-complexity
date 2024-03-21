@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "quantum-query-complexity"
+version = "0.1.0"
+description = ""
+authors = ["Danial <76565771+DanialHaseeb@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+numpy = "^1.26.4"
+networkx = "^3.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
