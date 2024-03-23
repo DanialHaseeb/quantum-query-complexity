@@ -1,16 +1,16 @@
 from typing import Self
-from lib.tensor.vector import Vector
+from lib.tensor.matrix import Vector
 
 class Graph:
 	"""A set of vectors that are connected if they are orthogonal."""
 	def __init__(self: Self, vectors: list[Vector]):
-		from networkx import Graph
+		import networkx
 		n = len(vectors)
-		self.graph = Graph()
+		self.graph = networkx.Graph()
 		for i in range(n):
 			for j in range(i+1, n):
 				if vectors[i].is_orthogonal(vectors[j]):
-					self.graph.add_edge(i, j) # type: ignore
+
 
 	@property
 	def max_clique(self: Self) -> list[int]:

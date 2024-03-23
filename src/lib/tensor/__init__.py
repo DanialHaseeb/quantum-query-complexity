@@ -26,24 +26,20 @@ class Tensor:
 		"""The components of this vector represented as a Python `list`."""
 		return self.components.tolist()
 
-	def __str__(self: Self) -> str:
+	def __repr__(self: Self) -> str:
 		"""The string representation of this vector."""
 		return str(self.components)
 
-	def __repr__(self: Self) -> str:
-		"""The code representation of this vector."""
-		return f"{Self}({self.array})"
-
 	def __getitem__(self: Self, index: tuple[int, ...]) -> float:
 		"""
-		Get the component of this vector at the given index.
+		Get the component of this tensor at the given index.
 		:param index: The index of the component to get.
 		"""
 		return self.components[index]
 
 	def __setitem__(self: Self, index: tuple[int, ...], value: float):
 		"""
-		Set the component of this vector at the given index.
+		Set the component of this tensor at the given index.
 		:param index: The index of the component to set.
 		:param value: The value to set the component to.
 		"""
@@ -54,7 +50,6 @@ class Tensor:
 		Check if this tensor is equal to another tensor.
 		:param other: The tensor to compare to.
 		"""
-		assert isinstance(other, Self)
 		assert self.dimensions == other.dimensions
 		from numpy import allclose
 		return allclose(self.components, other.components)
@@ -65,29 +60,20 @@ class Tensor:
 
 	def __add__(self: Self, other: Self) -> Self:
 		"""Add this tensor to another tensor."""
-		return type(self)((self.components + other.components).tolist())
+		return type(self)(*(self.components + other.components))
 
 	def __sub__(self: Self, other: Self) -> Self:
 		"""Subtract another tensor from this tensor."""
-		return type(self)((self.components - other.components).tolist())
+		return type(self)(*(self.components - other.components))
 
-	def __mul__(self: Self, other: float) -> Self:
+	def __mul__(self: Self, scalar: float) -> Self:
 		"""Multiply this tensor by a scalar."""
-		return type(self)((other * self.components).tolist())
+		return type(self)(*(scalar * self.components))
 
-	def __rmul__(self: Self, other: float) -> Self:
+	def __rmul__(self: Self, scalar: float) -> Self:
 		"""Multiply this tensor by a scalar."""
-		return self * other
+		return self * scalar
 
-	def __truediv__(self: Self, other: float) -> Self:
+	def __truediv__(self: Self, scalar: float) -> Self:
 		"""Divide this tensor by a scalar."""
-		return self * (1.0 / other)
-
-	@staticmethod
-	def new(*dimensions: int) -> "Tensor":
-		"""
-		Create a new tensor with the given dimensions where each entry is zero.
-		:param dimensions: The dimensions of the tensor.
-		"""
-		from numpy import zeros
-		return Tensor(zeros(dimensions).tolist())
+		return self * (1.0 / scalar)

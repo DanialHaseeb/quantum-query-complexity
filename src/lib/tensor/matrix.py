@@ -1,6 +1,6 @@
 from typing import Self
-from . import Tensor
-from .vector import Vector
+from lib.tensor import Tensor
+from lib.tensor.vector import Vector
 
 class Matrix(Tensor):
 	"""A rectangular array of numbers arranged in rows and columns."""
@@ -14,17 +14,17 @@ class Matrix(Tensor):
 	@property
 	def transpose(self: Self) -> Self:
 		"""The transpose of this matrix."""
-		return type(self)(self.components.T.tolist())
+		return type(self)(*self.components.T)
 
 	@property
 	def rows(self: Self) -> list[Vector]:
 		"""The rows of this matrix."""
-		return [Vector(row) for row in self.components]
+		return [Vector(*row) for row in self.components]
 
 	@property
 	def columns(self: Self) -> list[Vector]:
 		"""The columns of this matrix."""
-		return [Vector(row) for row in self.transpose.components]
+		return self.transpose.rows
 
 	@property
 	def determinant(self: Self) -> float:
@@ -58,18 +58,18 @@ class Matrix(Tensor):
 	def inverse(self: Self) -> Self:
 		"""The inverse of this matrix."""
 		from numpy.linalg import inv
-		return type(self)(inv(self.components).tolist())
+		return type(self)(*inv(self.components))
 
 	def __matmul__(self: Self, other: Self) -> Self:
 		"""Multiply this matrix by another matrix."""
 		assert self.dimensions[1] == other.dimensions[0]
-		return type(self)((self.components @ other.components).tolist())
+		return type(self)(*(self.components @ other.components))
 
 	def __pow__(self: Self, power: int) -> Self:
 		"""Raise this matrix to a power."""
 		assert self.is_square
 		from numpy.linalg import matrix_power
-		return type(self)(matrix_power(self.components, power).tolist())
+		return type(self)(*matrix_power(self.components, power))
 
 	@staticmethod
 	def new(*dimensions: int) -> "Matrix":
@@ -78,7 +78,7 @@ class Matrix(Tensor):
 		:param dimensions: The dimensions of the matrix.
 		"""
 		from numpy import zeros
-		return Matrix(zeros(dimensions).tolist())
+		return Matrix(*zeros(dimensions))
 
 	@staticmethod
 	def identity(size: int) -> "Matrix":
@@ -87,4 +87,4 @@ class Matrix(Tensor):
 		:param n: The size of the identity matrix.
 		"""
 		from numpy import identity
-		return Matrix(identity(size).tolist())
+		return Matrix(*identity(size))

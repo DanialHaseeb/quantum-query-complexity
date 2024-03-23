@@ -1,5 +1,5 @@
 from typing import Self
-from . import Tensor
+from lib.tensor import Tensor
 
 class Vector(Tensor):
 	"""A vector is a mathematical object that has a magnitude and a direction."""
@@ -43,7 +43,7 @@ class Vector(Tensor):
 		"""
 		assert self.dimensions == other.dimensions == (3,)
 		from numpy import cross
-		return type(self)((cross(self.components, other.components)).tolist())
+		return type(self)(*cross(self.components, other.components))
 
 	def projection(self: Self, other: Self) -> Self:
 		"""
@@ -86,11 +86,10 @@ class Vector(Tensor):
 		return isclose(self.dot(other), 0.0)
 
 	@staticmethod
-	def new(*dimensions: int) -> "Vector":
+	def new(length: int) -> "Vector":
 		"""
 		Create a new vector with the given dimensions where each entry is zero.
 		:param dimensions: The dimensions of the vector.
 		"""
-		assert len(dimensions) == 1
 		from numpy import zeros
-		return Vector(zeros(dimensions).tolist())
+		return Vector(*zeros(length))

@@ -1,15 +1,17 @@
-from lib.tensor import Tensor
-from lib.tensor.vector import Vector
-from lib.tensor.matrix import Matrix
+from itertools import combinations
+from lib.function import Function
 from lib.graph import Graph
 
-vectors = [
-	Vector(1,  1,  1,  1,  1,  1, -1, -1),
-	Vector(1,  1,  -1,  -1,  1,  1, 1, 1),
-	Vector(1,  1,  1,  1,  -1,  -1, 1, 10),
-	Vector(1,  1,  -1,  -1,  -1,  -1, -1, -1)
-]
+n = 3						# The number of input bits
+N = 1 << n			# Size of the powerset of the input bits
+m = N - 1 - n		# The number of remaining coefficients
 
-g = Graph(vectors)
-
-print(f"{g.max_clique}")
+for s_indices in map(list, list(combinations(range(N - 1), n))):
+	for coefficients in range(1 << m):
+		function = Function(s_indices, coefficients)
+		basis = Graph(function.table.columns).max_clique
+		print("General form:", function.equation)
+		print("Basis vectors:", len(basis))
+		for i in basis:
+			print(f"{i}: {function.vector(i)}")
+		print()
