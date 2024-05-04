@@ -10,6 +10,7 @@ class Graph:
 		for i in range(n):
 			for j in range(i+1, n):
 				if vectors[i].is_orthogonal(vectors[j]):
+					self.graph.add_edge(i, j)	# type: ignore
 
 
 	@property
